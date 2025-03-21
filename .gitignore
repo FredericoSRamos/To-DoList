@@ -2,4 +2,5 @@
 /__pycache__
 
 /static/users.db
+/static/users.db-journal
 /static/config.json

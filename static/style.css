@@ -39,6 +39,7 @@ html, body {
 .login-form {
     margin-top: 5%;
     text-align: center;
+    margin-bottom: 5%;
 }
 
 form {
@@ -54,7 +55,7 @@ input {
     padding: 10px;
 }
 
-button {
+.button-login-form {
     margin-top: 15px;
     padding: 10px;
     background-color: rgb(13, 58, 141);
@@ -74,13 +75,87 @@ button {
     color: black;
 }
 
-#checklist-div {
-    padding: 1%;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-}
-
 .login-error {
     margin-top: 2%;
+}
+
+.list-item {
+    display: flex;
+    gap: 1%;
+    justify-content: center;
+}
+
+#list-table {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 3%;
+    border-collapse: collapse;
+    text-align: center;
+    margin-bottom: 5%;
+}
+
+.task-table {
+    width: 20%;
+    word-wrap: break-word;
+    max-width: 1px;
+    overflow: hidden;
+}
+
+.utils-table {
+    width: 5%;
+}
+
+#check-table {
+    text-align: right;
+    padding-right: 4%;
+}
+
+#update-delete-table {
+    text-align: left;
+    padding-left: 4%;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.5);
+    accent-color: #4CAF50;
+}
+
+#update-delete-icons {
+    display: flex;
+    gap: 10%;
+}
+
+.click-icon {
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+
+.task-edit-text {
+    display: none;
+}
+
+#query-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1%;
+}
+
+.flash-message {
+    padding: 1%;
+    margin-top: 1%;
+    text-align: center;
+    border: 1px solid rgb(172, 15, 15);
+    background-color: rgb(219, 155, 155);
+    border-radius: 5px;
+    width: fit-content;
+    align-items: center;
+}
+
+#task-add-button {
+    background-color: rgb(13, 58, 141);
+    border: 1px solid black;
+    cursor: pointer;
+    padding: 1%;
 }

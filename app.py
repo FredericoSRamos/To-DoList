@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, flash
 from helpers import hash_password, verify_password
 
 app = Flask(__name__)
@@ -14,7 +14,7 @@ connection = sqlite3.connect("./static/users.db", check_same_thread=False)
 db = connection.cursor()
 
 db.execute("CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, password TEXT NOT NULL)")
-db.execute("CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, activity TEXT NOT NULL, username TEXT NOT NULL, FOREIGN KEY (username) REFERENCES users (username))")
+db.execute("CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, activity TEXT NOT NULL, username TEXT NOT NULL, is_checked INTEGER NOT NULL, FOREIGN KEY (username) REFERENCES users (username))")
 db.execute("CREATE INDEX IF NOT EXISTS index_username ON items (username)")
 
 @app.route("/")
@@ -22,7 +22,9 @@ def index():
     if "username" not in session:
         return render_template("login.html")
     
-    return render_template("index.html")
+    items = db.execute("SELECT id, activity, is_checked FROM items WHERE username = ?", (session["username"],)).fetchall()
+    
+    return render_template("index.html", items=items)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -79,3 +81,61 @@ def register():
 def logout():
     session.clear()
     return redirect("/login")
+
+@app.route("/add", methods=["GET", "POST"])
+def add():
+    if request.method == "POST":
+        task = request.form.get("task")
+
+        if not task:
+            flash("Cannot add empty task field")
+            return redirect("/")
+        
+        try:
+            db.execute("INSERT INTO items (activity, username, is_checked) VALUES (?, ?, 0)", (task, session["username"]))
+        except:
+            flash("An error occurred while trying to add the task, try again")
+
+    return redirect("/")
+
+@app.route("/update/<int:id>", methods=["GET", "POST"])
+def update(id):
+    if request.method == "POST":
+        data = request.get_json()
+
+        if not data:
+            flash("Unable to get data")
+            return redirect("/")
+
+        if "text" in data:
+            text = data.get("text")
+            if not text:
+                flash("Text field cannot be empty")
+                return redirect("/")
+            
+            try:
+                db.execute("UPDATE items SET activity = ? WHERE id = ?", (text, id))
+            except:
+                flash("An error occurred while trying to update the task, try again")
+        else:
+            checked = data.get("check")
+            if not checked:
+                flash("An error occurred, try again")
+                return redirect("/")
+            
+            try:
+                db.execute("UPDATE items SET check = ? WHERE id = ?", (checked, id))
+            except:
+                flash("An error occurred while trying to update the task, try again")
+    
+    return redirect("/")
+
+@app.route("/delete/<int:id>", methods=["GET", "POST"])
+def delete(id):
+    if request.method == "POST":
+        try:
+            db.execute("DELETE FROM items WHERE id = ? AND username = ?", (id, session["username"]))
+        except:
+            flash("An error occurred while trying to delete the task, try again")
+        
+    return redirect("/")
