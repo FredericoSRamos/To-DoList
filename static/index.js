@@ -2,15 +2,20 @@ const checkboxes = document.getElementsByClassName("checkbox-input");
 
 for (let checkbox of checkboxes) {
     if (checkbox.checked) {
-        document.getElementById("task-text-" + checkbox.getAttribute("id")).style.textDecoration = "line-through";
+        const id = checkbox.getAttribute("id")
+        document.getElementById("task-text-" + id).style.textDecoration = "line-through";
+        document.getElementById("task-row-" + id).style.backgroundColor = "#9bdba6";
     }
 
     checkbox.addEventListener("change", () => {
+        const id = checkbox.getAttribute("id")
         if (checkbox.checked) {
-            document.getElementById("task-text-" + checkbox.getAttribute("id")).style.textDecoration = "line-through";
+            document.getElementById("task-text-" + id).style.textDecoration = "line-through";
+            document.getElementById("task-row-" + id).style.backgroundColor = "#9bdba6";
             saveStatus(id, 1, "Check");
         } else {
-            document.getElementById("task-text-" + checkbox.getAttribute("id")).style.textDecoration = "none";
+            document.getElementById("task-text-" + id).style.textDecoration = "none";
+            document.getElementById("task-row-" + id).style.backgroundColor = "#ffffff";
             saveStatus(id, 0, "Check");
         }
     })

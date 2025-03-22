@@ -118,13 +118,10 @@ def update(id):
             except:
                 flash("An error occurred while trying to update the task, try again")
         else:
-            checked = data.get("check")
-            if not checked:
-                flash("An error occurred, try again")
-                return redirect("/")
+            checked = data.get("checked")
             
             try:
-                db.execute("UPDATE items SET check = ? WHERE id = ?", (checked, id))
+                db.execute("UPDATE items SET is_checked = ? WHERE id = ?", (checked, id))
             except:
                 flash("An error occurred while trying to update the task, try again")
     
